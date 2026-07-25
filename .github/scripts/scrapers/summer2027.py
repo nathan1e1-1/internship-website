@@ -12,19 +12,21 @@ def _extract_apply_url(cell_html: str) -> str:
 
 def _extract_text(cell: str) -> str:
     """Remove HTML tags and normalize whitespace."""
-    text = re.sub(r'<[^>]+>', '', cell)
+    text = cell.replace('<br>', ' ').replace('</br>', ' ')
+    text = re.sub(r'<[^>]+>', '', text)
     text = re.sub(r'\s+', ' ', text).strip()
     return text
 
+_EMOJI_MAP = {
+    '🛂': 'Does NOT offer sponsorship',
+    '🇺🇸': 'Requires U.S. Citizenship',
+    '🔒': 'Application is closed',
+    '🔥': 'FAANG+ company',
+    '🎓': 'Advanced degree required',
+}
+
 def _extract_emojis(text: str) -> tuple:
     """Extract emoji indicators and return (clean_text, notes_list)."""
-    _EMOJI_MAP = {
-        '🛂': 'Does NOT offer sponsorship',
-        '🇺🇸': 'Requires U.S. Citizenship',
-        '🔒': 'Application is closed',
-        '🔥': 'FAANG+ company',
-        '🎓': 'Advanced degree required',
-    }
     notes = []
     clean = text
     for emoji, note in _EMOJI_MAP.items():
@@ -52,9 +54,11 @@ def _normalize_entry(company: str, title: str, location: str, url: str, date_tex
     full_title_slug = re.sub(r'[^a-z0-9]', '-', title.lower()).strip('-')
     title_slug = full_title_slug[:20]
     title_hash = hashlib.md5(full_title_slug.encode()).hexdigest()[:6]
-    entry_id = f"{clean_company}-{title_hash}-{year}"
+    entry_id = f"{clean_company}-{title_slug}-{title_hash}-{year}"
 
     notes = notes_list or []
+    location_lower = (location if location else "TBD").lower()
+    work_type = "remote" if "remote" in location_lower else "in-person"
 
     return {
         "id": entry_id,
@@ -64,7 +68,7 @@ def _normalize_entry(company: str, title: str, location: str, url: str, date_tex
         "category": "general",
         "url": url,
         "location": location if location else "TBD",
-        "work_type": "in-person",
+        "work_type": work_type,
         "season": "Summer 2027",
         "date_posted": _parse_date(date_text),
         "deadline": None,
