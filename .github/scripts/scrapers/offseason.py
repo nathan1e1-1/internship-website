@@ -104,9 +104,8 @@ def _split_terms(terms_text: str) -> list:
     """Split terms like 'Fall 2026, Winter 2027, Spring 2027' into list."""
     if not terms_text:
         return ["Off-Season"]
-    # Split on comma or <br> tags
-    terms = re.split(r',|<br\s*/?>', terms_text)
-    terms = [t.strip() for t in terms if t.strip()]
+    terms = [t.strip() for t in terms_text.split(',')]
+    terms = [t for t in terms if t]
     return terms if terms else ["Off-Season"]
 
 def scrape_offseason(url: str) -> list:
