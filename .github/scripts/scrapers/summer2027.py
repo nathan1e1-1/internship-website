@@ -12,7 +12,7 @@ def _extract_apply_url(cell_html: str) -> str:
 
 def _extract_text(cell: str) -> str:
     """Remove HTML tags and normalize whitespace."""
-    text = cell.replace('<br>', ' ').replace('</br>', ' ')
+    text = re.sub(r'<br\s*/?>', ' ', cell, flags=re.IGNORECASE)
     text = re.sub(r'<[^>]+>', '', text)
     text = re.sub(r'\s+', ' ', text).strip()
     return text
@@ -78,6 +78,10 @@ def _normalize_entry(company: str, title: str, location: str, url: str, date_tex
     }
 
 def scrape_summer2027(url: str) -> list:
+    """Scrape Summer 2027 internships from a markdown table at the given URL.
+
+    Returns a list of normalized internship dicts.
+    """
     resp = requests.get(url, timeout=30)
     resp.raise_for_status()
     text = resp.text
@@ -95,7 +99,8 @@ def scrape_summer2027(url: str) -> list:
             continue
         if re.match(r'\|[\s\-:]+\|', line):
             continue
-        if 'Company' in line and 'Role' in line and 'Location' in line:
+        header_line = line.lower()
+        if 'company' in header_line and 'role' in header_line and 'location' in header_line:
             in_table = True
             continue
         if not in_table:
@@ -111,7 +116,7 @@ def scrape_summer2027(url: str) -> list:
         url = _extract_apply_url(cells[3])
         date_text = cells[4]
 
-        if raw_company.startswith('↳') or raw_company == '↳':
+        if raw_company.startswith('↳'):
             company = current_company
             company_notes = current_company_notes
         else:
