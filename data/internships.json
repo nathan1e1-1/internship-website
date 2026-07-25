@@ -1,0 +1,47 @@
+[
+  {
+    "id": "nvidia-ignite-2026",
+    "title": "NVIDIA Ignite",
+    "company": "NVIDIA",
+    "type": "internship",
+    "category": "top-tier",
+    "url": "https://www.nvidia.com/en-us/about-nvidia/careers/ignite/",
+    "location": "Santa Clara, CA",
+    "work_type": "hybrid",
+    "eligibility": "Sophomores and Juniors",
+    "date_posted": "2025-07-15",
+    "deadline": "2025-10-01",
+    "notes": "12-week summer program focused on AI/ML.",
+    "date_scraped": "2025-07-24"
+  },
+  {
+    "id": "google-step-2026",
+    "title": "STEP Internship",
+    "company": "Google",
+    "type": "internship",
+    "category": "top-tier",
+    "url": "https://buildyourfuture.withgoogle.com/programs/step",
+    "location": "Mountain View, CA (Multiple)",
+    "work_type": "hybrid",
+    "eligibility": "First and Second-year students",
+    "date_posted": "2025-07-10",
+    "deadline": "2025-09-15",
+    "notes": "First-year student engineering program.",
+    "date_scraped": "2025-07-24"
+  },
+  {
+    "id": "generic-swe-2026",
+    "title": "Software Engineering Intern",
+    "company": "Example Corp",
+    "type": "internship",
+    "category": "general",
+    "url": "https://example.com/careers",
+    "location": "Remote",
+    "work_type": "remote",
+    "eligibility": "All students",
+    "date_posted": "2025-07-20",
+    "deadline": "2025-08-15",
+    "notes": "Full-stack web development internship.",
+    "date_scraped": "2025-07-24"
+  }
+]
