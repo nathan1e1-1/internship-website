@@ -29,9 +29,16 @@ export function FeaturedSection({ internships }: FeaturedSectionProps) {
             >
               <div className="flex justify-between items-start mb-3">
                 <h3 className="font-bold text-lg text-card-foreground">{internship.company}</h3>
-                <span className={`text-xs px-2.5 py-1 rounded-full font-medium ${badge.color} ${badge.darkColor}`}>
-                  {badge.text}
-                </span>
+                <div className="flex gap-2">
+                  {internship.season && (
+                    <span className="text-xs px-2.5 py-1 rounded-full font-medium bg-blue-100 text-blue-700 dark:bg-blue-950 dark:text-blue-300">
+                      {internship.season}
+                    </span>
+                  )}
+                  <span className={`text-xs px-2.5 py-1 rounded-full font-medium ${badge.color} ${badge.darkColor}`}>
+                    {badge.text}
+                  </span>
+                </div>
               </div>
               <p className="text-muted-foreground mb-4 text-sm">{internship.title}</p>
               <a

@@ -2,12 +2,14 @@ interface FilterOptions {
   companies: string[];
   types: string[];
   workTypes: string[];
+  seasons: string[];
 }
 
 interface ActiveFilters {
   company: string;
   type: string;
   workType: string;
+  season: string;
 }
 
 interface FilterBarProps {
@@ -18,7 +20,7 @@ interface FilterBarProps {
 }
 
 export function FilterBar({ filters, activeFilters, onChange, onClear }: FilterBarProps) {
-  const current = activeFilters || { company: '', type: '', workType: '' };
+  const current = activeFilters || { company: '', type: '', workType: '', season: '' };
 
   const handleChange = (field: keyof ActiveFilters, value: string) => {
     onChange({ ...current, [field]: value });
@@ -65,6 +67,20 @@ export function FilterBar({ filters, activeFilters, onChange, onClear }: FilterB
           <option value="">All Work Types</option>
           {filters.workTypes.map((w) => (
             <option key={w} value={w}>{w}</option>
+          ))}
+        </select>
+      </div>
+      <div>
+        <label htmlFor="season" className="sr-only">Season</label>
+        <select
+          id="season"
+          value={current.season}
+          onChange={(e) => handleChange('season', e.target.value)}
+          className="border border-border rounded-lg px-3 py-2 text-sm bg-card text-card-foreground focus:outline-none focus:ring-2 focus:ring-ring"
+        >
+          <option value="">All Seasons</option>
+          {filters.seasons.map((s) => (
+            <option key={s} value={s}>{s}</option>
           ))}
         </select>
       </div>

@@ -11,6 +11,25 @@ from checkers.amazon import check_amazon
 from checkers.pinterest import check_pinterest
 from checkers.duolingo import check_duolingo
 from checkers.uber import check_uber
+from checkers.stripe import check_stripe
+from checkers.spotify import check_spotify
+from checkers.dropbox import check_dropbox
+from checkers.databricks import check_databricks
+from checkers.palantir import check_palantir
+from checkers.figma import check_figma
+from checkers.snowflake import check_snowflake
+from checkers.notion import check_notion
+from checkers.datadog import check_datadog
+from checkers.netflix import check_netflix
+from checkers.salesforce import check_salesforce
+from checkers.adobe import check_adobe
+from checkers.intel import check_intel
+from checkers.amd import check_amd
+from checkers.qualcomm import check_qualcomm
+from checkers.anthropic import check_anthropic
+from checkers.openai import check_openai
+from checkers.airbnb import check_airbnb
+from checkers.mistral import check_mistral
 from merge import merge_data, write_json
 
 
@@ -31,7 +50,9 @@ def main():
             print(f'{name} error: {e}', file=sys.stderr)
 
     top_tier = []
-    for checker in [check_nvidia, check_google, check_microsoft, check_meta, check_apple, check_amazon, check_pinterest, check_duolingo, check_uber]:
+    for checker in [check_nvidia, check_google, check_microsoft, check_meta, check_apple, check_amazon, check_pinterest, check_duolingo, check_uber,
+                    check_stripe, check_spotify, check_dropbox, check_databricks, check_palantir, check_figma, check_snowflake, check_notion, check_datadog,
+                    check_netflix, check_salesforce, check_adobe, check_intel, check_amd, check_qualcomm, check_anthropic, check_openai, check_airbnb, check_mistral]:
         try:
             result = checker()
             if result:

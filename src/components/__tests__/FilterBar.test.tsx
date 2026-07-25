@@ -5,6 +5,7 @@ const filters = {
   companies: ['Acme', 'Beta'],
   types: ['internship', 'fellowship'],
   workTypes: ['remote', 'hybrid', 'in-person'],
+  seasons: ['Summer 2026', 'Summer 2027'],
 };
 
 describe('FilterBar', () => {
@@ -13,6 +14,7 @@ describe('FilterBar', () => {
     expect(screen.getByLabelText(/company/i)).toBeInTheDocument();
     expect(screen.getByLabelText(/^Type$/i)).toBeInTheDocument();
     expect(screen.getByLabelText(/work type/i)).toBeInTheDocument();
+    expect(screen.getByLabelText(/season/i)).toBeInTheDocument();
   });
 
   it('does not render location filter', () => {
@@ -24,6 +26,6 @@ describe('FilterBar', () => {
     const onChange = jest.fn();
     render(<FilterBar filters={filters} onChange={onChange} onClear={() => {}} />);
     fireEvent.change(screen.getByLabelText(/company/i), { target: { value: 'Acme' } });
-    expect(onChange).toHaveBeenCalledWith(expect.objectContaining({ company: 'Acme' }));
+    expect(onChange).toHaveBeenCalledWith(expect.objectContaining({ company: 'Acme', season: '' }));
   });
 });

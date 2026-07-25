@@ -40,6 +40,11 @@ export function InternshipCard({ internship }: InternshipCardProps) {
             <span className="px-1.5 py-0.5 rounded-full bg-muted text-muted-foreground font-medium">
               {internship.work_type}
             </span>
+            {internship.season && (
+              <span className="px-1.5 py-0.5 rounded-full bg-blue-100 text-blue-700 dark:bg-blue-950 dark:text-blue-300 font-medium">
+                {internship.season}
+              </span>
+            )}
           </div>
         </div>
 

@@ -12,11 +12,12 @@ interface Filters {
   company: string;
   type: string;
   workType: string;
+  season: string;
 }
 
 export default function Home() {
   const [internships, setInternships] = useState<Internship[]>([]);
-  const [activeFilters, setActiveFilters] = useState<Filters>({ company: '', type: '', workType: '' });
+  const [activeFilters, setActiveFilters] = useState<Filters>({ company: '', type: '', workType: '', season: '' });
   const [lastUpdated, setLastUpdated] = useState<string>('unknown');
   const [isLoading, setIsLoading] = useState(true);
 
@@ -53,6 +54,9 @@ export default function Home() {
     if (activeFilters.workType) {
       result = result.filter((i) => i.work_type === activeFilters.workType);
     }
+    if (activeFilters.season) {
+      result = result.filter((i) => i.season === activeFilters.season);
+    }
     return result;
   }, [internships, activeFilters]);
 
@@ -63,6 +67,7 @@ export default function Home() {
     companies: Array.from(new Set(internships.map((i) => i.company))).sort(),
     types: Array.from(new Set(internships.map((i) => i.type))).sort(),
     workTypes: Array.from(new Set(internships.map((i) => i.work_type))).sort(),
+    seasons: Array.from(new Set(internships.map((i) => i.season).filter((s): s is string => !!s))).sort(),
   }), [internships]);
 
   return (
@@ -87,7 +92,7 @@ export default function Home() {
                 filters={filters}
                 activeFilters={activeFilters}
                 onChange={setActiveFilters}
-                onClear={() => setActiveFilters({ company: '', type: '', workType: '' })}
+                onClear={() => setActiveFilters({ company: '', type: '', workType: '', season: '' })}
               />
               <InternshipList internships={general} />
             </section>
