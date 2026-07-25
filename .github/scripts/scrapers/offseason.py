@@ -76,7 +76,8 @@ def _normalize_entry(company: str, title: str, location: str, url: str, age_text
     full_title_slug = re.sub(r'[^a-z0-9]', '-', title.lower()).strip('-')
     title_slug = full_title_slug[:20]
     title_hash = hashlib.md5(full_title_slug.encode()).hexdigest()[:6]
-    entry_id = f"{clean_company}-{title_slug}-{title_hash}-{year}"
+    season_slug = re.sub(r'[^a-z0-9]', '-', season.lower()).strip('-')
+    entry_id = f"{clean_company}-{title_slug}-{title_hash}-{season_slug}-{year}"
 
     notes = notes_list or []
     location_lower = (location if location else "TBD").lower()
