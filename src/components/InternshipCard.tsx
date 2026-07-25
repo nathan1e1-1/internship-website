@@ -1,5 +1,6 @@
 import { Internship } from '@/lib/types';
 import { formatRelativeDate, isNew } from '@/lib/dates';
+import { parseLocation } from '@/lib/locations';
 
 interface InternshipCardProps {
   internship: Internship;
@@ -9,6 +10,7 @@ interface InternshipCardProps {
 export function InternshipCard({ internship, compact = true }: InternshipCardProps) {
   const isNewListing = isNew(internship.date_posted, 7);
   const relativeDate = formatRelativeDate(internship.date_posted);
+  const displayLocation = parseLocation(internship.location);
 
   return (
     <div 
@@ -36,12 +38,12 @@ export function InternshipCard({ internship, compact = true }: InternshipCardPro
             )}
           </div>
           <div className="flex items-center gap-3 mt-1 text-xs text-muted-foreground flex-wrap">
-            <span className="flex items-center gap-1">
+            <span className="flex items-center gap-1" title={internship.location}>
               <svg className="w-3 h-3 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
               </svg>
-              {internship.location}
+              {displayLocation}
             </span>
             <span className="flex items-center gap-1" title={internship.date_posted || 'Unknown'}>
               <svg className="w-3 h-3 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">

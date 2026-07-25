@@ -3,6 +3,7 @@ interface FilterOptions {
   types: string[];
   workTypes: string[];
   seasons: string[];
+  locations: string[];
 }
 
 interface ActiveFilters {
@@ -10,6 +11,7 @@ interface ActiveFilters {
   type: string;
   workType: string;
   season: string;
+  location: string;
 }
 
 interface FilterBarProps {
@@ -22,13 +24,13 @@ interface FilterBarProps {
 }
 
 export function FilterBar({ filters, activeFilters, onChange, onClear, compact = true, onToggleCompact }: FilterBarProps) {
-  const current = activeFilters || { company: '', type: '', workType: '', season: '' };
+  const current = activeFilters || { company: '', type: '', workType: '', season: '', location: '' };
 
   const handleChange = (field: keyof ActiveFilters, value: string) => {
     onChange({ ...current, [field]: value });
   };
 
-  const hasActiveFilters = current.company || current.type || current.workType || current.season;
+  const hasActiveFilters = current.company || current.type || current.workType || current.season || current.location;
 
   return (
     <div className="sticky top-0 z-30 bg-background/80 backdrop-blur-md border-b border-border py-3 -mx-4 px-4 mb-4">
@@ -86,6 +88,20 @@ export function FilterBar({ filters, activeFilters, onChange, onClear, compact =
             <option value="">All Seasons</option>
             {filters.seasons.map((s) => (
               <option key={s} value={s}>{s}</option>
+            ))}
+          </select>
+        </div>
+        <div>
+          <label htmlFor="location" className="sr-only">Location</label>
+          <select
+            id="location"
+            value={current.location}
+            onChange={(e) => handleChange('location', e.target.value)}
+            className="border border-border rounded-lg px-3 py-2 text-sm bg-card text-card-foreground focus:outline-none focus:ring-2 focus:ring-ring"
+          >
+            <option value="">All Locations</option>
+            {filters.locations.map((l) => (
+              <option key={l} value={l}>{l}</option>
             ))}
           </select>
         </div>

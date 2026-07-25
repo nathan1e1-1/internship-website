@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useMemo } from 'react';
 import { Internship } from '@/lib/types';
+import { parseLocation } from '@/lib/locations';
 import { Header } from '@/components/Header';
 import { FeaturedSection } from '@/components/FeaturedSection';
 import { FilterBar } from '@/components/FilterBar';
@@ -13,11 +14,12 @@ interface Filters {
   type: string;
   workType: string;
   season: string;
+  location: string;
 }
 
 export default function Home() {
   const [internships, setInternships] = useState<Internship[]>([]);
-  const [activeFilters, setActiveFilters] = useState<Filters>({ company: '', type: '', workType: '', season: '' });
+  const [activeFilters, setActiveFilters] = useState<Filters>({ company: '', type: '', workType: '', season: '', location: '' });
   const [lastUpdated, setLastUpdated] = useState<string>('unknown');
   const [isLoading, setIsLoading] = useState(true);
   const [compactView, setCompactView] = useState(true);
@@ -58,6 +60,9 @@ export default function Home() {
     if (activeFilters.season) {
       result = result.filter((i) => i.season === activeFilters.season);
     }
+    if (activeFilters.location) {
+      result = result.filter((i) => parseLocation(i.location) === activeFilters.location);
+    }
     return result;
   }, [internships, activeFilters]);
 
@@ -69,6 +74,7 @@ export default function Home() {
     types: Array.from(new Set(internships.map((i) => i.type))).sort(),
     workTypes: Array.from(new Set(internships.map((i) => i.work_type))).sort(),
     seasons: Array.from(new Set(internships.map((i) => i.season).filter((s): s is string => !!s))).sort(),
+    locations: Array.from(new Set(internships.map((i) => parseLocation(i.location)))).sort(),
   }), [internships]);
 
   return (
@@ -93,7 +99,7 @@ export default function Home() {
                 filters={filters}
                 activeFilters={activeFilters}
                 onChange={setActiveFilters}
-                onClear={() => setActiveFilters({ company: '', type: '', workType: '', season: '' })}
+                onClear={() => setActiveFilters({ company: '', type: '', workType: '', season: '', location: '' })}
                 compact={compactView}
                 onToggleCompact={() => setCompactView(!compactView)}
               />
