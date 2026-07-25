@@ -20,6 +20,7 @@ export default function Home() {
   const [filtered, setFiltered] = useState<Internship[]>([]);
   const [activeFilters, setActiveFilters] = useState<Filters>({ company: '', location: '', type: '', workType: '' });
   const [lastUpdated, setLastUpdated] = useState<string>('unknown');
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     fetch('/api/internships')
@@ -33,6 +34,9 @@ export default function Home() {
       })
       .catch((err) => {
         console.error('Failed to fetch internships:', err);
+      })
+      .finally(() => {
+        setIsLoading(false);
       });
   }, []);
 
@@ -56,20 +60,34 @@ export default function Home() {
   };
 
   return (
-    <main className="min-h-screen bg-white">
+    <main className="min-h-screen bg-background text-foreground transition-colors duration-200">
       <div className="max-w-5xl mx-auto px-4">
         <Header lastUpdated={lastUpdated} />
-        <FeaturedSection internships={featured} />
-        <section className="py-6">
-          <h2 className="text-xl font-semibold mb-2">All Opportunities</h2>
-          <FilterBar
-            filters={filters}
-            activeFilters={activeFilters}
-            onChange={setActiveFilters}
-            onClear={() => setActiveFilters({ company: '', location: '', type: '', workType: '' })}
-          />
-          <InternshipList internships={general} />
-        </section>
+
+        {isLoading ? (
+          <div className="py-16 text-center">
+            <div className="inline-block w-8 h-8 border-2 border-primary border-t-transparent rounded-full animate-spin mb-4" />
+            <p className="text-muted-foreground">Loading opportunities...</p>
+          </div>
+        ) : (
+          <>
+            <FeaturedSection internships={featured} />
+            <section className="py-6">
+              <div className="flex items-center justify-between">
+                <h2 className="text-xl font-semibold text-foreground">All Opportunities</h2>
+                <span className="text-sm text-muted-foreground">{general.length} found</span>
+              </div>
+              <FilterBar
+                filters={filters}
+                activeFilters={activeFilters}
+                onChange={setActiveFilters}
+                onClear={() => setActiveFilters({ company: '', location: '', type: '', workType: '' })}
+              />
+              <InternshipList internships={general} />
+            </section>
+          </>
+        )}
+
         <Footer />
       </div>
     </main>

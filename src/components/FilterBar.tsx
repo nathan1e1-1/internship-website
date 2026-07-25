@@ -27,14 +27,14 @@ export function FilterBar({ filters, activeFilters, onChange, onClear }: FilterB
   };
 
   return (
-    <div className="flex flex-wrap gap-3 py-4">
+    <div className="flex flex-wrap gap-3 py-4 items-center">
       <div>
         <label htmlFor="company" className="sr-only">Company</label>
         <select
           id="company"
           value={current.company}
           onChange={(e) => handleChange('company', e.target.value)}
-          className="border rounded px-3 py-2 text-sm"
+          className="border border-border rounded-lg px-3 py-2 text-sm bg-card text-card-foreground focus:outline-none focus:ring-2 focus:ring-ring"
         >
           <option value="">All Companies</option>
           {filters.companies.map((c) => (
@@ -48,7 +48,7 @@ export function FilterBar({ filters, activeFilters, onChange, onClear }: FilterB
           id="location"
           value={current.location}
           onChange={(e) => handleChange('location', e.target.value)}
-          className="border rounded px-3 py-2 text-sm"
+          className="border border-border rounded-lg px-3 py-2 text-sm bg-card text-card-foreground focus:outline-none focus:ring-2 focus:ring-ring"
         >
           <option value="">All Locations</option>
           {filters.locations.map((l) => (
@@ -62,7 +62,7 @@ export function FilterBar({ filters, activeFilters, onChange, onClear }: FilterB
           id="type"
           value={current.type}
           onChange={(e) => handleChange('type', e.target.value)}
-          className="border rounded px-3 py-2 text-sm"
+          className="border border-border rounded-lg px-3 py-2 text-sm bg-card text-card-foreground focus:outline-none focus:ring-2 focus:ring-ring"
         >
           <option value="">All Types</option>
           {filters.types.map((t) => (
@@ -76,7 +76,7 @@ export function FilterBar({ filters, activeFilters, onChange, onClear }: FilterB
           id="workType"
           value={current.workType}
           onChange={(e) => handleChange('workType', e.target.value)}
-          className="border rounded px-3 py-2 text-sm"
+          className="border border-border rounded-lg px-3 py-2 text-sm bg-card text-card-foreground focus:outline-none focus:ring-2 focus:ring-ring"
         >
           <option value="">All Work Types</option>
           {filters.workTypes.map((w) => (
@@ -86,7 +86,7 @@ export function FilterBar({ filters, activeFilters, onChange, onClear }: FilterB
       </div>
       <button
         onClick={onClear}
-        className="text-sm text-blue-600 hover:underline"
+        className="text-sm text-primary hover:text-secondary font-medium transition-colors duration-150 focus:outline-none focus:ring-2 focus:ring-ring rounded px-2 py-1"
       >
         Clear all
       </button>
