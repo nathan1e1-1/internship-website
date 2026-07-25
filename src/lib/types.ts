@@ -7,6 +7,7 @@ export interface Internship {
   url: string;
   location: string;
   work_type: 'remote' | 'hybrid' | 'in-person';
+  season?: string;
   eligibility?: string;
   date_posted?: string;
   deadline?: string;
