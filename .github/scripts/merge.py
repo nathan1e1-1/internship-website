@@ -1,6 +1,5 @@
 import json
 import re
-from datetime import datetime
 
 def _is_valid_url(url: str) -> bool:
     if not url:

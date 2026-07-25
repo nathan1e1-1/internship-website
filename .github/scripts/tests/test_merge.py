@@ -1,6 +1,5 @@
 import pytest
 from merge import merge_data
-from datetime import datetime
 
 def test_merge_deduplicates_by_id():
     bulk = [
