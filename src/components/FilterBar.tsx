@@ -35,20 +35,68 @@ export function FilterBar({ filters, activeFilters, onChange, onClear, compact =
   return (
     <div className="sticky top-0 z-30 bg-background/80 backdrop-blur-md border-b border-border py-3 -mx-4 px-4 mb-4">
       <div className="flex flex-wrap gap-2 items-center">
-        <div>
+        {/* Compact text inputs for high-cardinality filters */}
+        <div className="relative">
           <label htmlFor="company" className="sr-only">Company</label>
-          <select
-            id="company"
-            value={current.company}
-            onChange={(e) => handleChange('company', e.target.value)}
-            className="border border-border rounded-lg px-3 py-2 text-sm bg-card text-card-foreground focus:outline-none focus:ring-2 focus:ring-ring"
-          >
-            <option value="">All Companies</option>
+          <div className="relative">
+            <input
+              id="company"
+              list="company-list"
+              value={current.company}
+              onChange={(e) => handleChange('company', e.target.value)}
+              placeholder="Company..."
+              className="border border-border rounded-lg pl-3 pr-8 py-2 text-sm bg-card text-card-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring w-36"
+            />
+            {current.company && (
+              <button
+                onClick={() => handleChange('company', '')}
+                className="absolute right-2 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+                aria-label="Clear company filter"
+              >
+                <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            )}
+          </div>
+          <datalist id="company-list">
             {filters.companies.map((c) => (
-              <option key={c} value={c}>{c}</option>
+              <option key={c} value={c} />
             ))}
-          </select>
+          </datalist>
         </div>
+
+        <div className="relative">
+          <label htmlFor="location" className="sr-only">Location</label>
+          <div className="relative">
+            <input
+              id="location"
+              list="location-list"
+              value={current.location}
+              onChange={(e) => handleChange('location', e.target.value)}
+              placeholder="Location..."
+              className="border border-border rounded-lg pl-3 pr-8 py-2 text-sm bg-card text-card-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring w-32"
+            />
+            {current.location && (
+              <button
+                onClick={() => handleChange('location', '')}
+                className="absolute right-2 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+                aria-label="Clear location filter"
+              >
+                <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            )}
+          </div>
+          <datalist id="location-list">
+            {filters.locations.map((l) => (
+              <option key={l} value={l} />
+            ))}
+          </datalist>
+        </div>
+
+        {/* Dropdowns for low-cardinality filters */}
         <div>
           <label htmlFor="type" className="sr-only">Type</label>
           <select
@@ -88,20 +136,6 @@ export function FilterBar({ filters, activeFilters, onChange, onClear, compact =
             <option value="">All Seasons</option>
             {filters.seasons.map((s) => (
               <option key={s} value={s}>{s}</option>
-            ))}
-          </select>
-        </div>
-        <div>
-          <label htmlFor="location" className="sr-only">Location</label>
-          <select
-            id="location"
-            value={current.location}
-            onChange={(e) => handleChange('location', e.target.value)}
-            className="border border-border rounded-lg px-3 py-2 text-sm bg-card text-card-foreground focus:outline-none focus:ring-2 focus:ring-ring"
-          >
-            <option value="">All Locations</option>
-            {filters.locations.map((l) => (
-              <option key={l} value={l}>{l}</option>
             ))}
           </select>
         </div>
