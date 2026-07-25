@@ -1,0 +1,31 @@
+import requests
+from datetime import datetime
+
+def _normalize(entry: dict) -> dict:
+    company = entry.get("company", "Unknown")
+    title = entry.get("title", "Unknown")
+    year = str(datetime.now().year)
+    entry_id = f"{company.lower().replace(' ', '-')}-{title.lower().replace(' ', '-')}-{year}"
+    return {
+        "id": entry_id,
+        "title": title,
+        "company": company,
+        "type": "internship",
+        "category": "general",
+        "url": entry.get("url", ""),
+        "location": entry.get("location", "TBD"),
+        "work_type": entry.get("work_type", "in-person"),
+        "eligibility": entry.get("eligibility"),
+        "date_posted": entry.get("date_posted"),
+        "deadline": entry.get("deadline"),
+        "notes": entry.get("notes"),
+        "date_scraped": datetime.now().isoformat()[:10],
+    }
+
+def scrape_github_json(url: str) -> list:
+    resp = requests.get(url, timeout=30)
+    resp.raise_for_status()
+    data = resp.json()
+    if not isinstance(data, list):
+        return []
+    return [_normalize(item) for item in data if isinstance(item, dict)]
