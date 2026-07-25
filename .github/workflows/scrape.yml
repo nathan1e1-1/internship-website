@@ -1,0 +1,85 @@
+name: Scrape Internships
+
+on:
+  schedule:
+    - cron: '0 6 * * *'
+  workflow_dispatch:
+
+jobs:
+  scrape:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: |
+          pip install -r .github/scripts/requirements.txt
+
+      - name: Run scrapers and checkers
+        env:
+          SIMPLIFY_API_KEY: ${{ secrets.SIMPLIFY_API_KEY }}
+        run: |
+          cd .github/scripts
+          python << 'PYEOF'
+          import json
+          from scrapers.github_json import scrape_github_json
+          from scrapers.pitt_csc import scrape_pitt_csc
+          from scrapers.simplify import scrape_simplify
+          from checkers.nvidia import check_nvidia
+          from checkers.google import check_google
+          from checkers.microsoft import check_microsoft
+          from checkers.meta import check_meta
+          from checkers.apple import check_apple
+          from checkers.amazon import check_amazon
+          from checkers.pinterest import check_pinterest
+          from checkers.duolingo import check_duolingo
+          from checkers.uber import check_uber
+          from merge import merge_data, write_json
+
+          bulk = []
+          try:
+              bulk += scrape_github_json('https://raw.githubusercontent.com/SimplifyJobs/Summer2026-Internships/dev/README.md')
+          except Exception as e:
+              print('github_json error:', e)
+          try:
+              bulk += scrape_pitt_csc('https://raw.githubusercontent.com/pittcsc/Summer2026-Internships/main/README.md')
+          except Exception as e:
+              print('pitt_csc error:', e)
+          try:
+              bulk += scrape_simplify('https://api.simplify.com/v1/internships')
+          except Exception as e:
+              print('simplify error:', e)
+
+          top_tier = []
+          for checker in [check_nvidia, check_google, check_microsoft, check_meta, check_apple, check_amazon, check_pinterest, check_duolingo, check_uber]:
+              try:
+                  result = checker()
+                  if result:
+                      top_tier.append(result)
+              except Exception as e:
+                  print(f'{checker.__name__} error:', e)
+
+          merged = merge_data(bulk, top_tier)
+          write_json(merged, '../../data/internships.json')
+          print(f'Wrote {len(merged)} entries to data/internships.json')
+          PYEOF
+
+      - name: Commit if changed
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add data/internships.json
+          if git diff --cached --quiet; then
+            echo "No changes to commit"
+          else
+            git commit -m "data: daily internship scrape $(date -u +%Y-%m-%d)"
+            git push
+          fi
