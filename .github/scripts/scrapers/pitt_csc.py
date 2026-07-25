@@ -94,6 +94,7 @@ def _normalize_entry(company: str, title: str, location: str, url: str, age_text
         "url": url,
         "location": location if location else "TBD",
         "work_type": "in-person",
+        "season": "Summer 2026",
         "date_posted": _parse_age(age_text),
         "deadline": None,
         "eligibility": None,
