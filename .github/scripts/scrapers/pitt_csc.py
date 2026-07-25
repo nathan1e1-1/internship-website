@@ -1,5 +1,6 @@
 import requests
 import re
+import hashlib
 from datetime import datetime, timedelta
 from bs4 import BeautifulSoup
 
@@ -72,8 +73,12 @@ def _parse_age(age_text: str) -> str:
 def _normalize_entry(company: str, title: str, location: str, url: str, age_text: str, notes_list: list = None) -> dict:
     year = str(datetime.now().year)
     clean_company = re.sub(r'[^a-z0-9]', '-', company.lower())[:20].strip('-')
-    clean_title = re.sub(r'[^a-z0-9]', '-', title.lower())[:30].strip('-')
-    entry_id = f"{clean_company}-{clean_title}-{year}"
+    # Use a hash of the full title to ensure uniqueness, plus first 20 chars of slug for readability
+    full_title_slug = re.sub(r'[^a-z0-9]', '-', title.lower()).strip('-')
+    title_slug = full_title_slug[:20]
+    # Append short hash of full title to avoid collisions on truncation
+    title_hash = hashlib.md5(full_title_slug.encode()).hexdigest()[:6]
+    entry_id = f"{clean_company}-{title_slug}-{title_hash}-{year}"
 
     notes = notes_list or []
     # If URL is from Simplify, add a note
@@ -144,4 +149,13 @@ def scrape_pitt_csc(url: str) -> list:
             if entry["url"]:
                 entries.append(entry)
 
-    return entries
+    # Deduplicate by (company, title, location) keeping the first occurrence
+    seen = {}
+    deduped = []
+    for entry in entries:
+        key = (entry["company"], entry["title"], entry["location"])
+        if key not in seen:
+            seen[key] = True
+            deduped.append(entry)
+
+    return deduped
