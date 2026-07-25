@@ -21,7 +21,7 @@ describe('InternshipList', () => {
   it('renders list of internships', () => {
     render(<InternshipList internships={mockList} />);
     expect(screen.getByText('SWE Intern')).toBeInTheDocument();
-    expect(screen.getByText('Acme')).toBeInTheDocument();
+    expect(screen.getByText(/@ Acme/)).toBeInTheDocument();
   });
 
   it('shows empty state when no internships', () => {

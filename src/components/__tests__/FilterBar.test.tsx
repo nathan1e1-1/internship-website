@@ -3,7 +3,6 @@ import { FilterBar } from '../FilterBar';
 
 const filters = {
   companies: ['Acme', 'Beta'],
-  locations: ['Remote', 'NYC'],
   types: ['internship', 'fellowship'],
   workTypes: ['remote', 'hybrid', 'in-person'],
 };
@@ -12,9 +11,13 @@ describe('FilterBar', () => {
   it('renders all filter dropdowns', () => {
     render(<FilterBar filters={filters} onChange={() => {}} onClear={() => {}} />);
     expect(screen.getByLabelText(/company/i)).toBeInTheDocument();
-    expect(screen.getByLabelText(/location/i)).toBeInTheDocument();
     expect(screen.getByLabelText(/^Type$/i)).toBeInTheDocument();
     expect(screen.getByLabelText(/work type/i)).toBeInTheDocument();
+  });
+
+  it('does not render location filter', () => {
+    render(<FilterBar filters={filters} onChange={() => {}} onClear={() => {}} />);
+    expect(screen.queryByLabelText(/location/i)).not.toBeInTheDocument();
   });
 
   it('calls onChange when a filter is selected', () => {

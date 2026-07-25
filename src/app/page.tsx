@@ -10,7 +10,6 @@ import { Footer } from '@/components/Footer';
 
 interface Filters {
   company: string;
-  location: string;
   type: string;
   workType: string;
 }
@@ -18,7 +17,7 @@ interface Filters {
 export default function Home() {
   const [internships, setInternships] = useState<Internship[]>([]);
   const [filtered, setFiltered] = useState<Internship[]>([]);
-  const [activeFilters, setActiveFilters] = useState<Filters>({ company: '', location: '', type: '', workType: '' });
+  const [activeFilters, setActiveFilters] = useState<Filters>({ company: '', type: '', workType: '' });
   const [lastUpdated, setLastUpdated] = useState<string>('unknown');
   const [isLoading, setIsLoading] = useState(true);
 
@@ -26,10 +25,16 @@ export default function Home() {
     fetch('/api/internships')
       .then((res) => res.json())
       .then((data: Internship[]) => {
-        setInternships(data);
-        setFiltered(data);
-        if (data.length > 0) {
-          setLastUpdated(data[0].date_scraped);
+        // Ensure data is sorted by date_posted descending (most recent first)
+        const sorted = [...data].sort((a, b) => {
+          const dateA = a.date_posted || '';
+          const dateB = b.date_posted || '';
+          return dateB.localeCompare(dateA);
+        });
+        setInternships(sorted);
+        setFiltered(sorted);
+        if (sorted.length > 0) {
+          setLastUpdated(sorted[0].date_scraped);
         }
       })
       .catch((err) => {
@@ -43,9 +48,9 @@ export default function Home() {
   useEffect(() => {
     let result = [...internships];
     if (activeFilters.company) result = result.filter((i) => i.company === activeFilters.company);
-    if (activeFilters.location) result = result.filter((i) => i.location === activeFilters.location);
     if (activeFilters.type) result = result.filter((i) => i.type === activeFilters.type);
     if (activeFilters.workType) result = result.filter((i) => i.work_type === activeFilters.workType);
+    // Preserve the date_posted sort order
     setFiltered(result);
   }, [activeFilters, internships]);
 
@@ -54,7 +59,6 @@ export default function Home() {
 
   const filters = {
     companies: Array.from(new Set(internships.map((i) => i.company))).sort(),
-    locations: Array.from(new Set(internships.map((i) => i.location))).sort(),
     types: Array.from(new Set(internships.map((i) => i.type))).sort(),
     workTypes: Array.from(new Set(internships.map((i) => i.work_type))).sort(),
   };
@@ -81,7 +85,7 @@ export default function Home() {
                 filters={filters}
                 activeFilters={activeFilters}
                 onChange={setActiveFilters}
-                onClear={() => setActiveFilters({ company: '', location: '', type: '', workType: '' })}
+                onClear={() => setActiveFilters({ company: '', type: '', workType: '' })}
               />
               <InternshipList internships={general} />
             </section>

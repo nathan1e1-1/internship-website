@@ -20,7 +20,7 @@ describe('InternshipCard', () => {
   it('renders title, company, location, and apply button', () => {
     render(<InternshipCard internship={mockInternship} />);
     expect(screen.getByText('SWE Intern')).toBeInTheDocument();
-    expect(screen.getByText('Acme')).toBeInTheDocument();
+    expect(screen.getByText(/@ Acme/)).toBeInTheDocument();
     expect(screen.getByText('Remote')).toBeInTheDocument();
     expect(screen.getByText('Apply')).toHaveAttribute('href', 'https://acme.com');
   });

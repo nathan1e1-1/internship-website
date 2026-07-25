@@ -1,13 +1,11 @@
 interface FilterOptions {
   companies: string[];
-  locations: string[];
   types: string[];
   workTypes: string[];
 }
 
 interface ActiveFilters {
   company: string;
-  location: string;
   type: string;
   workType: string;
 }
@@ -20,7 +18,7 @@ interface FilterBarProps {
 }
 
 export function FilterBar({ filters, activeFilters, onChange, onClear }: FilterBarProps) {
-  const current = activeFilters || { company: '', location: '', type: '', workType: '' };
+  const current = activeFilters || { company: '', type: '', workType: '' };
 
   const handleChange = (field: keyof ActiveFilters, value: string) => {
     onChange({ ...current, [field]: value });
@@ -39,20 +37,6 @@ export function FilterBar({ filters, activeFilters, onChange, onClear }: FilterB
           <option value="">All Companies</option>
           {filters.companies.map((c) => (
             <option key={c} value={c}>{c}</option>
-          ))}
-        </select>
-      </div>
-      <div>
-        <label htmlFor="location" className="sr-only">Location</label>
-        <select
-          id="location"
-          value={current.location}
-          onChange={(e) => handleChange('location', e.target.value)}
-          className="border border-border rounded-lg px-3 py-2 text-sm bg-card text-card-foreground focus:outline-none focus:ring-2 focus:ring-ring"
-        >
-          <option value="">All Locations</option>
-          {filters.locations.map((l) => (
-            <option key={l} value={l}>{l}</option>
           ))}
         </select>
       </div>
