@@ -20,6 +20,7 @@ export default function Home() {
   const [activeFilters, setActiveFilters] = useState<Filters>({ company: '', type: '', workType: '', season: '' });
   const [lastUpdated, setLastUpdated] = useState<string>('unknown');
   const [isLoading, setIsLoading] = useState(true);
+  const [compactView, setCompactView] = useState(true);
 
   useEffect(() => {
     fetch('/api/internships')
@@ -84,7 +85,7 @@ export default function Home() {
           <>
             <FeaturedSection internships={featured} />
             <section className="py-6">
-              <div className="flex items-center justify-between">
+              <div className="flex items-center justify-between mb-2">
                 <h2 className="text-xl font-semibold text-foreground">All Opportunities</h2>
                 <span className="text-sm text-muted-foreground">{general.length} found</span>
               </div>
@@ -93,8 +94,10 @@ export default function Home() {
                 activeFilters={activeFilters}
                 onChange={setActiveFilters}
                 onClear={() => setActiveFilters({ company: '', type: '', workType: '', season: '' })}
+                compact={compactView}
+                onToggleCompact={() => setCompactView(!compactView)}
               />
-              <InternshipList internships={general} />
+              <InternshipList internships={general} compact={compactView} />
             </section>
           </>
         )}

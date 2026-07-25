@@ -26,6 +26,6 @@ describe('InternshipList', () => {
 
   it('shows empty state when no internships', () => {
     render(<InternshipList internships={[]} />);
-    expect(screen.getByText(/no internships found/i)).toBeInTheDocument();
+    expect(screen.getByText(/no matches found/i)).toBeInTheDocument();
   });
 });
